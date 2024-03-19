@@ -26,6 +26,7 @@ class MapStore {
       selectFeaturesMode: observable,
       loadingSpatialQuery: observable,
       layersKeys: computed,
+      layersActiveComputed: computed,
       layersGeomColumns: computed,
       setLayerRef: action,
       toggleActiveLayer: action,
@@ -75,6 +76,15 @@ class MapStore {
 
   get layersKeys() {
     return this.layers.map((item) => item.key);
+  }
+
+  get layersActiveComputed() {
+    return this.layers.map((item) => {
+      const resultado = {};
+      resultado[item.key] = this.layersActive[item.key];
+
+      return resultado;
+    });
   }
 
   get layersGeomColumns() {
@@ -184,7 +194,6 @@ class MapStore {
   }
 
   removeLayer(key) {
-    debugger;
     this.loading = true;
     this.loadingMap = true;
     const newLayers = this.layers.filter((layer) => {
@@ -206,6 +215,8 @@ class MapStore {
       data: [],
       geometryColumn: '',
       styles: {},
+      extrudePolygon: '',
+      extrusionColumn: '',
     }
   ) {
     this.loading = true;
@@ -226,6 +237,8 @@ class MapStore {
       geometryColumn: '',
       styles: {},
       choroplethStyleDefinition: {},
+      extrudePolygon: '',
+      extrusionColumn: '',
     }
   ) {
     if (this.layersKeys.includes(layer.key)) {
@@ -373,7 +386,6 @@ class MapStore {
       second: {},
       operation,
     };
-    debugger;
     keysA.forEach((key) => {
       requestData.first[key] = { data: [], geometryColumn: this.layersGeomColumns[key] };
       requestData.first[key].data = this.selectedFeatures.first[key].map((item) => item.gid);

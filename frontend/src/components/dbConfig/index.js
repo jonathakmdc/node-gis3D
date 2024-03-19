@@ -134,7 +134,6 @@ const DbConfigModal = observer(({ visible, onCancel, isEdit }) => {
           value={selectedDatabase}
           defaultValue={selectedDatabase}
           onChange={(value) => {
-            debugger;
             if (value === 'sqlite' || selectedDatabase === 'sqlite') {
               clearFormData();
             }

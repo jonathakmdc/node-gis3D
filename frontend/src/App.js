@@ -1,5 +1,5 @@
-import Map from './components/map';
-import Template from './components/template';
+import Map from './components/map/map3D';
+import Template from './components/template/index3D';
 
 function App() {
   return (

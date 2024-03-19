@@ -137,7 +137,6 @@ const SqlModal = observer(({ visible, onCancel }) => {
 
   const handlerAddLayer = async () => {
     setLoadingAddLayer(true);
-    debugger;
     try {
       validaData();
       const formFinal = {
