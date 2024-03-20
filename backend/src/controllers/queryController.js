@@ -89,4 +89,15 @@ module.exports = {
       console.error(err);
     }
   },
+  async getCentroidTable(request, response) {
+    try {
+      const { tableName } = request.body;
+      validationSql(tableName);
+      data = await repository.getCentroidTable(tableName);
+      response.status(200).json(data);
+    } catch (err) {
+      response.status(500).json({ message: err.message });
+      console.error(err);
+    }
+  },
 };

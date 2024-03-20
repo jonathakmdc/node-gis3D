@@ -1,11 +1,11 @@
 import axios from 'axios';
 import ApiEndpoints from '../constants/ApiEndpoints';
-import env from "react-dotenv";
+import env from 'react-dotenv';
 import corsHeaders from '../constants/RequestConfig';
 
 class MapService {
   baseUrl = window._env_.BASE_API_URL;
-  
+
   getTables() {
     return axios.get(`${this.baseUrl}${ApiEndpoints.tables}`, corsHeaders);
   }
@@ -20,6 +20,9 @@ class MapService {
   }
   saveQueryIntoTable(queryObject) {
     return axios.post(`${this.baseUrl}${ApiEndpoints.queryToTable}`, queryObject, corsHeaders);
+  }
+  getCentroidTable(queryObject) {
+    return axios.post(`${this.baseUrl}${ApiEndpoints.getCentroidTable}`, queryObject, corsHeaders);
   }
 }
 

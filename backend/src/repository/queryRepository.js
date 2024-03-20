@@ -248,6 +248,18 @@ module.exports = {
     return { data: result, query: sql };
   },
 
+  async getCentroidTable(tableName) {
+    if (!tableName) {
+      throw 'É necessário o nome da tabela para consulta!';
+    }
+
+    const sql = `SELECT ST_AsGeoJSON(ST_CENTROID(GEOM)),gid from ${tableName}`;
+
+    const result = await query(sql);
+
+    return { data: result, query: sql };
+  },
+
   async saveQueryToTable(tableName, sql) {
     if (!tableName) {
       throw 'É necessário definir o nome da tabela de destino!';

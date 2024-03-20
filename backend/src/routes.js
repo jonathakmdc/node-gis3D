@@ -88,6 +88,10 @@ routes.post('/query-to-table', (req, res) => {
   return redirect(req, res, queryRepository.saveQueryIntoTable);
 });
 
+routes.post('/get-centroid-table', (req, res) => {
+  return redirect(req, res, queryRepository.getCentroidTable);
+});
+
 const redirect = (req, res, route) => {
   try {
     return route(req, res);
