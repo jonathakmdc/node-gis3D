@@ -25,6 +25,10 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
     elevationScale: '1',
     extrudePolygon: false,
     extrusionColumn: '',
+    hexagon: false,
+    elevationColumn: '',
+    elevationScaleHexagon: '1000',
+    radiusHexagon: '1000',
   });
   // const [informationColumns, setInformationColumns] = useState([]);
   const [tooltipColumns, setTooltipColumns] = useState([]);
@@ -433,7 +437,7 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
     );
   };
 
-  const render3DPanelContent = () => {
+  const render3DPanelContentExtrusion = () => {
     if (formData.type !== 'query_result') {
       return (
         <div>
@@ -445,7 +449,7 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
                 setFormData({
                   ...formData,
                   extrudePolygon: checked,
-                  extrusionColumn: checked ? formData.extrusionColumn : null,
+                  extrusionColumn: checked ? formData.extrusionColumn : '',
                 });
               }}
             />
@@ -468,10 +472,71 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
           <div className="field">
             <div className="field-label">Elevation Scale</div>
             <InputNumber
+              disabled={!formData.extrudePolygon}
               defaultValue={formData.elevationScale}
+              value={formData.elevationScale}
               min={0}
               step="0.1"
               onChange={(value) => setFormData({ ...formData, elevationScale: value })}
+            />
+          </div>
+        </div>
+      );
+    }
+  };
+
+  const render3DPanelContentHexagon = () => {
+    if (formData.type !== 'query_result') {
+      return (
+        <div>
+          <div className="field">
+            <div className="field-label">Hexagon Layer</div>
+            <Switch
+              checked={formData.hexagon}
+              onChange={(checked) => {
+                setFormData({
+                  ...formData,
+                  hexagon: checked,
+                  elevationColumn: checked ? formData.elevationColumn : null,
+                });
+              }}
+            />
+          </div>
+          <div className="field">
+            <div className="field-label">Elevation Column</div>
+            <Select
+              disabled={!formData.hexagon}
+              value={formData.elevationColumn}
+              onChange={(value) => setFormData({ ...formData, elevationColumn: value })}
+              style={{ width: '100%', marginTop: 10 }}
+            >
+              {getSelectedTableColumns().map((column) => (
+                <Option key={column} value={column}>
+                  {column}
+                </Option>
+              ))}
+            </Select>
+          </div>
+          <div className="field">
+            <div className="field-label">Elevation Scale</div>
+            <InputNumber
+              disabled={!formData.hexagon}
+              defaultValue={formData.elevationScaleHexagon}
+              value={formData.elevationScaleHexagon}
+              min={0}
+              step="0.1"
+              onChange={(value) => setFormData({ ...formData, elevationScaleHexagon: value })}
+            />
+          </div>
+          <div className="field">
+            <div className="field-label">Radius (in meters)</div>
+            <InputNumber
+              disabled={!formData.hexagon}
+              defaultValue={formData.radiusHexagon}
+              value={formData.radiusHexagon}
+              min={0}
+              step="0.1"
+              onChange={(value) => setFormData({ ...formData, radiusHexagon: value })}
             />
           </div>
         </div>
@@ -499,7 +564,14 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
           {!editLayerKey && formData.key && renderGemotryColumnSelect()}
           <Collapse ghost key="" accordion>
             <Panel header="3D" key="3d" disabled collapsible={formData.key ? 'header' : 'disabled'}>
-              {render3DPanelContent()}
+              <Collapse accordion>
+                <Panel header="Extrusion" collapsible={formData.hexagon ? 'disabled' : 'header'}>
+                  {render3DPanelContentExtrusion()}
+                </Panel>
+                <Panel header="Hexagon" collapsible={formData.extrudePolygon ? 'disabled' : 'header'}>
+                  {render3DPanelContentHexagon()}
+                </Panel>
+              </Collapse>
             </Panel>
             <Panel header="Tooltip" key="tooltip" disabled collapsible={formData.key ? 'header' : 'disabled'}>
               {renderTooltipPanelContent()}

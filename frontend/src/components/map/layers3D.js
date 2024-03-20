@@ -178,8 +178,6 @@ const Layers = observer(({ onSelectLayers }) => {
 
     layersMapStore.forEach((layer) => {
       if (mapStore.layersActive[layer.key]) {
-        getCentroidTable(layer.key);
-
         const styleFunction = (data) => {
           if (layer.styles.colorFunction) {
             return {
@@ -222,38 +220,42 @@ const Layers = observer(({ onSelectLayers }) => {
 
         resultLayers.push(layerData);
 
-        const dataHexagon = data.map((item) => {
-          const newItem = { ...item };
+        if (layer.hexagon) {
+          getCentroidTable(layer.key);
 
-          newItem.centroid = calculateCentroid(item.geometry);
+          const dataHexagon = data.map((item) => {
+            const newItem = { ...item };
 
-          return newItem;
-        });
+            //novos dados necessários
 
-        console.log(dataHexagon);
+            return newItem;
+          });
 
-        const hexagonLayer = new HexagonLayer({
-          data: dataHexagon,
-          pickable: layer.displayColumns.length > 0,
-          extruded: true,
-          radius: 2000,
-          elevationScale: 1000,
-          getPosition: (d) => getCentroid(d.gid),
-          getElevationValue: (f) => {
-            return f[0]['pop_estim'];
-          },
-          getColorValue: (f) => {
-            return f[0]['pop_estim'];
-          },
-          colorRange: [
-            [65, 105, 225],
-            [0, 128, 0],
-            [238, 173, 45],
-            [207, 14, 14],
-          ],
-        });
+          console.log(layer.elevationScaleHexagon);
 
-        resultLayers.push(hexagonLayer);
+          const hexagonLayer = new HexagonLayer({
+            data: dataHexagon,
+            pickable: layer.displayColumns.length > 0,
+            extruded: true,
+            radius: layer.radiusHexagon ? Number(layer.radiusHexagon) : 1000,
+            elevationScale: layer.elevationScaleHexagon ? Number(layer.elevationScaleHexagon) : 1000,
+            getPosition: (d) => getCentroid(d.gid),
+            getElevationValue: (f) => {
+              return f[0][layer.elevationColumn];
+            },
+            getColorValue: (f) => {
+              return f[0][layer.elevationColumn];
+            },
+            colorRange: [
+              [65, 105, 225],
+              [0, 128, 0],
+              [238, 173, 45],
+              [207, 14, 14],
+            ],
+          });
+
+          resultLayers.push(hexagonLayer);
+        }
       }
     });
 

@@ -219,6 +219,8 @@ class MapStore {
       styles: {},
       extrudePolygon: '',
       extrusionColumn: '',
+      hexagon: '',
+      elevationColumn: '',
     }
   ) {
     this.loading = true;
@@ -241,6 +243,8 @@ class MapStore {
       choroplethStyleDefinition: {},
       extrudePolygon: '',
       extrusionColumn: '',
+      hexagon: '',
+      elevationColumn: '',
     }
   ) {
     if (this.layersKeys.includes(layer.key)) {
@@ -541,6 +545,7 @@ class MapStore {
 
   async getCentroidTable(tableName) {
     const res = { tableName: tableName };
+    this.loadingMap = true;
 
     //return this.service.getCentroidTable(res);
 
@@ -558,7 +563,8 @@ class MapStore {
         runInAction(() => {
           showNotification('error', error ? error.toString() : null);
         });
-      });
+      })
+      .finally(() => runInAction(() => (this.loadingMap = false)));
   }
 
   async saveQueryIntoTable(key) {
