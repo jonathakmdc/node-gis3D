@@ -45,6 +45,8 @@ class MapStore {
       saveLayers: action,
       loadSavedLayers: action,
       saveQueryIntoTable: action,
+      getCentroidTable: action,
+      centroidsTable: observable,
     });
 
     this.service = new MapService();
@@ -533,6 +535,28 @@ class MapStore {
       .finally(() => {
         runInAction(() => {
           this.loading = false;
+        });
+      });
+  }
+
+  async getCentroidTable(tableName) {
+    const res = { tableName: tableName };
+
+    //return this.service.getCentroidTable(res);
+
+    this.service
+      .getCentroidTable(res)
+      .then((response) => {
+        runInAction(() => {
+          if (response.data) {
+            this.centroidsTable = response.data;
+            return response.data;
+          }
+        });
+      })
+      .catch((error) => {
+        runInAction(() => {
+          showNotification('error', error ? error.toString() : null);
         });
       });
   }

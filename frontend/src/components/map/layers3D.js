@@ -160,12 +160,26 @@ const Layers = observer(({ onSelectLayers }) => {
     return [centroidX, centroidY];
   };
 
+  const getCentroidTable = async (tableName) => {
+    const result = await mapStore.getCentroidTable(tableName);
+    return result;
+  };
+
+  const getCentroid = (gid) => {
+    const centroid = mapStore.centroidsTable.data.find((item) => item.gid === gid);
+
+    console.log(JSON.parse(centroid.st_asgeojson).coordinates);
+    return toJS(JSON.parse(centroid.st_asgeojson).coordinates);
+  };
+
   useEffect(() => {
     const resultLayers = [];
     const layersMapStore = toJS(mapStore.layers);
 
     layersMapStore.forEach((layer) => {
       if (mapStore.layersActive[layer.key]) {
+        getCentroidTable(layer.key);
+
         const styleFunction = (data) => {
           if (layer.styles.colorFunction) {
             return {
@@ -189,7 +203,7 @@ const Layers = observer(({ onSelectLayers }) => {
 
         const layerData = new GeoJsonLayer({
           data: data,
-          pickable: layer.displayColumns.length > 0,
+          pickable: true,
           extruded: layer.extrudePolygon ?? false,
           wireframe: layer.extrudePolygon ?? false,
           getFillColor: (f) => {
@@ -222,14 +236,14 @@ const Layers = observer(({ onSelectLayers }) => {
           data: dataHexagon,
           pickable: layer.displayColumns.length > 0,
           extruded: true,
-          radius: 3000,
+          radius: 2000,
           elevationScale: 1000,
-          getPosition: (d) => d.centroid,
+          getPosition: (d) => getCentroid(d.gid),
           getElevationValue: (f) => {
-            return f[0]['area_km2'];
+            return f[0]['pop_estim'];
           },
           getColorValue: (f) => {
-            return f[0]['perimet_km'];
+            return f[0]['pop_estim'];
           },
           colorRange: [
             [65, 105, 225],
