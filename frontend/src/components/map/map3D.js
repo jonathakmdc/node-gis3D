@@ -71,17 +71,19 @@ const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/s
 
 function getTooltip({ object }) {
   if (object) {
-    const html = object.displayColumns
-      .map(
-        ({ column, label }) =>
-          `<div>
+    if (object.displayColumns && object.displayColumns.length > 0) {
+      const html = object.displayColumns
+        .map(
+          ({ column, label }) =>
+            `<div>
           <b>${label}: </b>${object[column]}
         </div>`
-      )
-      .join('');
-    return {
-      html: `${html}`,
-    };
+        )
+        .join('');
+      return {
+        html: `${html}`,
+      };
+    }
   }
 }
 
