@@ -32,10 +32,14 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
   });
   // const [informationColumns, setInformationColumns] = useState([]);
   const [tooltipColumns, setTooltipColumns] = useState([]);
+  const [tooltipColumnsHexagon, setTooltipColumnsHexagon] = useState([]);
   const [visibleInfoModal, setVisibleInfoModal] = useState(false);
+  const [visibleInfoModalHexagon, setVisibleInfoModalHexagon] = useState(false);
   const [visibleChoroplethModal, setVisibleChoroplethModal] = useState(false);
   const [selectedColumn, setSelectedColumn] = useState('');
   const [columnLabel, setColumnLabel] = useState('');
+  const [selectedColumnHexagon, setSelectedColumnHexagon] = useState('');
+  const [columnLabelHexagon, setColumnLabelHexagon] = useState('');
   const [loading, setLoading] = useState(false);
   const [choroplethStyleDefinition, setChoroplethStyleDefinition] = useState({
     colorFunction: null,
@@ -52,6 +56,7 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
       const layer = toJS(mapStore.layers[index]);
       setFormData(layer);
       setTooltipColumns(layer.displayColumns);
+      setTooltipColumnsHexagon(layer.displayColumnsHexagon);
       setChoroplethStyleDefinition(layer.choroplethStyleDefinition);
     }
   }, [editLayerKey, visible]);
@@ -73,12 +78,14 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
       mapStore.editLayer({
         ...formData,
         displayColumns: tooltipColumns,
+        displayColumnsHexagon: tooltipColumnsHexagon,
         choroplethStyleDefinition: choroplethStyleDefinition,
       });
     } else {
       mapStore.addLayerToMap({
         ...formData,
         displayColumns: tooltipColumns,
+        displayColumnsHexagon: tooltipColumnsHexagon,
         choroplethStyleDefinition: choroplethStyleDefinition,
       });
     }
@@ -88,6 +95,7 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
       key: null,
       type: 'polygon',
       displayColumns: [],
+      displayColumnsHexagon: [],
       geometryColumn: '',
       data: [],
       styleType: 'static',
@@ -175,6 +183,10 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
     return tooltipColumns.some((col) => col.column === columnName);
   };
 
+  const validateColumnSelectHexagon = (columnName) => {
+    return tooltipColumnsHexagon.some((col) => col.column === columnName);
+  };
+
   const renderColumnSelect = () => {
     return (
       <div className="field">
@@ -203,6 +215,34 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
     );
   };
 
+  const renderColumnSelectHexagon = () => {
+    return (
+      <div className="field">
+        <div className="field-label">Column</div>
+        <div>
+          <Select
+            placeholder={'Selecione uma coluna'}
+            style={{ width: '100%' }}
+            showSearch
+            onChange={(value) => {
+              setSelectedColumnHexagon(value);
+              setColumnLabelHexagon(value);
+            }}
+            // value={selectedColumn}
+          >
+            {getSelectedTableColumns().map((layer) => {
+              return (
+                <Option disabled={validateColumnSelectHexagon(layer)} value={layer}>
+                  {layer}
+                </Option>
+              );
+            })}
+          </Select>
+        </div>
+      </div>
+    );
+  };
+
   const getSelectedTableColumns = () => {
     const layer = mapStore.availableLayers.find((table) => table.name === formData.key);
     return layer ? layer.columns : [];
@@ -218,6 +258,22 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
             style={{ width: '100%' }}
             value={columnLabel}
             onChange={(event) => setColumnLabel(event.target.value)}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  const renderColumnNameInputHexagon = () => {
+    return (
+      <div className="field">
+        <div className="field-label">Column Label</div>
+        <div>
+          <Input
+            placeholder={'Informe o valor'}
+            style={{ width: '100%' }}
+            value={columnLabelHexagon}
+            onChange={(event) => setColumnLabelHexagon(event.target.value)}
           />
         </div>
       </div>
@@ -301,6 +357,15 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
     setTimeout(setLoading, 200);
   };
 
+  const removeColumnHexagon = (key) => {
+    setLoading(true);
+    const index = tooltipColumnsHexagon.map((item) => item.key).indexOf(key);
+    const newList = tooltipColumnsHexagon;
+    newList.splice(index, 1);
+    setTooltipColumnsHexagon(newList);
+    setTimeout(setLoading, 200);
+  };
+
   const columnsTooltip = [
     { title: 'Column', dataIndex: 'column', key: 'column' },
     { title: 'Label', dataIndex: 'label', key: 'label' },
@@ -314,6 +379,19 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
     },
   ];
 
+  const columnsTooltipHexagon = [
+    { title: 'Column', dataIndex: 'column', key: 'column' },
+    { title: 'Label', dataIndex: 'label', key: 'label' },
+    {
+      title: '',
+      dataIndex: '',
+      key: '',
+      render: (row) => {
+        return <Button danger icon={<DeleteOutlined />} onClick={() => removeColumnHexagon(row.key)} />;
+      },
+    },
+  ];
+
   const addColumnToList = () => {
     setLoading(true);
     const obj = { column: selectedColumn, label: columnLabel, key: selectedColumn };
@@ -323,6 +401,18 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
     setVisibleInfoModal(false);
     setSelectedColumn('');
     setColumnLabel('');
+    setTimeout(setLoading, 500);
+  };
+
+  const addColumnToListHexagon = () => {
+    setLoading(true);
+    const obj = { column: selectedColumnHexagon, label: columnLabelHexagon, key: selectedColumnHexagon };
+    const newList = tooltipColumnsHexagon;
+    newList.push(obj);
+    setTooltipColumnsHexagon(newList);
+    setVisibleInfoModalHexagon(false);
+    setSelectedColumnHexagon('');
+    setColumnLabelHexagon('');
     setTimeout(setLoading, 500);
   };
 
@@ -375,6 +465,33 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
     }
   };
 
+  const renderTooltipPanelHexagon = () => {
+    if (formData.type !== 'query_result') {
+      return (
+        <>
+          <Button
+            onClick={() => setVisibleInfoModalHexagon(true)}
+            type="primary"
+            icon={<PlusOutlined />}
+            style={{ marginBottom: '10px' }}
+            disabled={!formData.key}
+          >
+            New Column
+          </Button>
+          <Table
+            size="small"
+            pagination={{ pageSize: 5 }}
+            loading={loading}
+            columns={columnsTooltipHexagon}
+            dataSource={tooltipColumnsHexagon}
+            key={new Date()}
+          />
+          {visibleInfoModalHexagon && renderAddColumnToolTipModalHexagon()}
+        </>
+      );
+    }
+  };
+
   const renderAddColumnToolTipModal = () => {
     return (
       <Modal
@@ -393,6 +510,28 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
       >
         {renderColumnSelect()}
         {renderColumnNameInput()}
+      </Modal>
+    );
+  };
+
+  const renderAddColumnToolTipModalHexagon = () => {
+    return (
+      <Modal
+        visible={visibleInfoModalHexagon}
+        onCancel={() => {
+          setVisibleInfoModalHexagon(false);
+          setSelectedColumnHexagon('');
+          setColumnLabelHexagon('');
+        }}
+        onOk={addColumnToListHexagon}
+        title="New Column"
+        closable={false}
+        okText="Add"
+        cancelText="Cancel"
+        key="modal-columns-add"
+      >
+        {renderColumnSelectHexagon()}
+        {renderColumnNameInputHexagon()}
       </Modal>
     );
   };
@@ -539,6 +678,8 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
               onChange={(value) => setFormData({ ...formData, radiusHexagon: value })}
             />
           </div>
+          <div className="field-label">Hexagon Tooltip</div>
+          <div>{renderTooltipPanelHexagon()}</div>
         </div>
       );
     }

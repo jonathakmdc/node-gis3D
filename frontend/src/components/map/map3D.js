@@ -71,7 +71,7 @@ const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/s
 
 function getTooltip({ object }) {
   if (object) {
-    if (object.displayColumns && object.displayColumns.length > 0) {
+    if (object.displayColumns) {
       const html = object.displayColumns
         .map(
           ({ column, label }) =>
@@ -83,6 +83,22 @@ function getTooltip({ object }) {
       return {
         html: `${html}`,
       };
+    }
+    const objHexagon = object?.points?.[0].source;
+    if (objHexagon) {
+      if (objHexagon.displayColumnsHexagon) {
+        const html = objHexagon.displayColumnsHexagon
+          .map(
+            ({ column, label }) =>
+              `<div>
+          <b>${label}: </b>${objHexagon[column]}
+        </div>`
+          )
+          .join('');
+        return {
+          html: `${html}`,
+        };
+      }
     }
   }
 }

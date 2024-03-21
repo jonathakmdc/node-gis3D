@@ -167,16 +167,16 @@ const Layers = observer(({ onSelectLayers }) => {
 
   const getCentroid = (gid) => {
     const centroid = mapStore.centroidsTable.data.find((item) => item.gid === gid);
-
-    console.log(JSON.parse(centroid.st_asgeojson).coordinates);
     return toJS(JSON.parse(centroid.st_asgeojson).coordinates);
   };
 
   useEffect(() => {
+    mapStore.loadingMap = true;
     const resultLayers = [];
     const layersMapStore = toJS(mapStore.layers);
 
     layersMapStore.forEach((layer) => {
+      console.log(layer);
       if (mapStore.layersActive[layer.key]) {
         const styleFunction = (data) => {
           if (layer.styles.colorFunction) {
@@ -189,13 +189,17 @@ const Layers = observer(({ onSelectLayers }) => {
           }
         };
 
-        const data = layer.data.map((item) => {
-          const newItem = { ...item };
+        let data = layer.data;
 
-          newItem.displayColumns = layer.displayColumns;
+        if (layer.displayColumns.length > 0) {
+          data = layer.data.map((item) => {
+            const newItem = { ...item };
 
-          return newItem;
-        });
+            newItem.displayColumns = layer.displayColumns;
+
+            return newItem;
+          });
+        }
 
         console.log(layer);
 
@@ -208,9 +212,9 @@ const Layers = observer(({ onSelectLayers }) => {
             return hexToRgba(styleFunction(f).fillColor, layer.extrudePolygon ? 1 : styleFunction(f).fillOpacity);
           },
           getElevation: (f) => {
-            return f[layer.extrusionColumn];
+            return Number(f[layer.extrusionColumn]);
           },
-          elevationScale: layer.elevationScale,
+          elevationScale: Number(layer.elevationScale),
           getLineColor: hexToRgba(layer.styles.color, layer.styles.opacity),
           getLineWidth: layer.styles.weight,
           lineWidthUnits: 'pixels',
@@ -223,25 +227,29 @@ const Layers = observer(({ onSelectLayers }) => {
         if (layer.hexagon) {
           getCentroidTable(layer.key);
 
-          const dataHexagon = data.map((item) => {
-            const newItem = { ...item };
+          let dataHexagon = data;
 
-            //novos dados necessários
+          if (layer.displayColumnsHexagon.length > 0) {
+            dataHexagon = data.map((item) => {
+              const newItem = { ...item };
 
-            return newItem;
-          });
+              newItem.displayColumnsHexagon = layer.displayColumnsHexagon;
+              //novos dados necessários
 
-          console.log(layer.elevationScaleHexagon);
+              return newItem;
+            });
+          }
 
           const hexagonLayer = new HexagonLayer({
             data: dataHexagon,
-            pickable: layer.displayColumns.length > 0,
+            pickable: true,
             extruded: true,
             radius: layer.radiusHexagon ? Number(layer.radiusHexagon) : 1000,
             elevationScale: layer.elevationScaleHexagon ? Number(layer.elevationScaleHexagon) : 1000,
             getPosition: (d) => getCentroid(d.gid),
             getElevationValue: (f) => {
-              return f[0][layer.elevationColumn];
+              console.log(Number(f[0][layer.elevationColumn]));
+              return Number(f[0][layer.elevationColumn]);
             },
             getColorValue: (f) => {
               return f[0][layer.elevationColumn];
@@ -262,6 +270,7 @@ const Layers = observer(({ onSelectLayers }) => {
     const newLayers = [baseLayer, ...resultLayers];
     setLayers(newLayers);
     onSelectLayers(newLayers);
+    mapStore.loadingMap = false;
   }, [mapStore.layersActiveComputed]);
 
   const renderLayers = () => {

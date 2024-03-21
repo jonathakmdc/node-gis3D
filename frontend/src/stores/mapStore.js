@@ -66,6 +66,8 @@ class MapStore {
     this.createConnection = this.createConnection.bind(this);
     this.saveLayers = this.saveLayers.bind(this);
     this.loadSavedLayers = this.loadSavedLayers.bind(this);
+
+    this.getAvailableLayers();
   }
 
   setLayerRef(key, value) {
@@ -214,6 +216,7 @@ class MapStore {
       key: '',
       type: '',
       displayColumns: [],
+      displayColumnsHexagon: [],
       data: [],
       geometryColumn: '',
       styles: {},
@@ -237,6 +240,7 @@ class MapStore {
       key: '',
       type: '',
       displayColumns: [],
+      displayColumnsHexagon: [],
       data: [],
       geometryColumn: '',
       styles: {},
@@ -546,6 +550,7 @@ class MapStore {
   async getCentroidTable(tableName) {
     const res = { tableName: tableName };
     this.loadingMap = true;
+    this.loading = true;
 
     //return this.service.getCentroidTable(res);
 
@@ -564,7 +569,12 @@ class MapStore {
           showNotification('error', error ? error.toString() : null);
         });
       })
-      .finally(() => runInAction(() => (this.loadingMap = false)));
+      .finally(() =>
+        runInAction(() => {
+          this.loadingMap = false;
+          this.loading = false;
+        })
+      );
   }
 
   async saveQueryIntoTable(key) {
