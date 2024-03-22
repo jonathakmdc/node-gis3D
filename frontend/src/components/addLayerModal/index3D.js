@@ -36,12 +36,20 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
   const [visibleInfoModal, setVisibleInfoModal] = useState(false);
   const [visibleInfoModalHexagon, setVisibleInfoModalHexagon] = useState(false);
   const [visibleChoroplethModal, setVisibleChoroplethModal] = useState(false);
+  const [visibleChoroplethModalHexagon, setVisibleChoroplethModalHexagon] = useState(false);
   const [selectedColumn, setSelectedColumn] = useState('');
   const [columnLabel, setColumnLabel] = useState('');
   const [selectedColumnHexagon, setSelectedColumnHexagon] = useState('');
   const [columnLabelHexagon, setColumnLabelHexagon] = useState('');
   const [loading, setLoading] = useState(false);
   const [choroplethStyleDefinition, setChoroplethStyleDefinition] = useState({
+    colorFunction: null,
+    equal: false,
+    column: null,
+    defaultColor: '#3388ff',
+    values: [],
+  });
+  const [choroplethStyleDefinitionHexagon, setChoroplethStyleDefinitionHexagon] = useState({
     colorFunction: null,
     equal: false,
     column: null,
@@ -58,6 +66,7 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
       setTooltipColumns(layer.displayColumns);
       setTooltipColumnsHexagon(layer.displayColumnsHexagon);
       setChoroplethStyleDefinition(layer.choroplethStyleDefinition);
+      setChoroplethStyleDefinitionHexagon(layer.choroplethStyleDefinitionHexagon);
     }
   }, [editLayerKey, visible]);
 
@@ -80,6 +89,7 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
         displayColumns: tooltipColumns,
         displayColumnsHexagon: tooltipColumnsHexagon,
         choroplethStyleDefinition: choroplethStyleDefinition,
+        choroplethStyleDefinitionHexagon: choroplethStyleDefinitionHexagon,
       });
     } else {
       mapStore.addLayerToMap({
@@ -87,6 +97,7 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
         displayColumns: tooltipColumns,
         displayColumnsHexagon: tooltipColumnsHexagon,
         choroplethStyleDefinition: choroplethStyleDefinition,
+        choroplethStyleDefinitionHexagon: choroplethStyleDefinitionHexagon,
       });
     }
     onOk();
@@ -474,7 +485,7 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
             type="primary"
             icon={<PlusOutlined />}
             style={{ marginBottom: '10px' }}
-            disabled={!formData.key}
+            disabled={!formData.key || !formData.hexagon}
           >
             New Column
           </Button>
@@ -680,6 +691,28 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
           </div>
           <div className="field-label">Hexagon Tooltip</div>
           <div>{renderTooltipPanelHexagon()}</div>
+          <br />
+          <div>
+            <Button
+              disabled={!formData.hexagon}
+              onClick={() => setVisibleChoroplethModalHexagon(true)}
+              style={{ width: '100%', marginBottom: '20px' }}
+            >
+              Set Color Variable
+            </Button>
+            {visibleChoroplethModalHexagon && (
+              <ChoroplethModal
+                onOk={(styleDefinition) => {
+                  setChoroplethStyleDefinitionHexagon(styleDefinition);
+                  setVisibleChoroplethModalHexagon(false);
+                }}
+                onCancel={() => setVisibleChoroplethModalHexagon(false)}
+                visible={visibleChoroplethModalHexagon}
+                styleDefinition={choroplethStyleDefinitionHexagon}
+                tableColumns={getSelectedTableColumns()}
+              />
+            )}
+          </div>
         </div>
       );
     }

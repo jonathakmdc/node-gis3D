@@ -170,13 +170,40 @@ const Layers = observer(({ onSelectLayers }) => {
     return toJS(JSON.parse(centroid.st_asgeojson).coordinates);
   };
 
+  const getColorsHexagon = (def) => {
+    const colorRange = [];
+
+    colorRange.push(hexToRgba(def.defaultColor, 1));
+
+    for (let i = 0; i < def.values.length; i++) {
+      colorRange.push(hexToRgba(def.values[i].color, 1));
+    }
+
+    return colorRange;
+  };
+
+  const getColorValueHexagon = (values, value) => {
+    let position = 0;
+
+    for (let i = 0; i < values.length; i++) {
+      if (Number(value) >= Number(values[i].value)) {
+        position = values[i].pos + 1;
+      } else {
+        break;
+      }
+    }
+
+    console.log(position);
+
+    return position;
+  };
+
   useEffect(() => {
     mapStore.loadingMap = true;
     const resultLayers = [];
     const layersMapStore = toJS(mapStore.layers);
 
     layersMapStore.forEach((layer) => {
-      console.log(layer);
       if (mapStore.layersActive[layer.key]) {
         const styleFunction = (data) => {
           if (layer.styles.colorFunction) {
@@ -248,18 +275,18 @@ const Layers = observer(({ onSelectLayers }) => {
             elevationScale: layer.elevationScaleHexagon ? Number(layer.elevationScaleHexagon) : 1000,
             getPosition: (d) => getCentroid(d.gid),
             getElevationValue: (f) => {
-              console.log(Number(f[0][layer.elevationColumn]));
               return Number(f[0][layer.elevationColumn]);
             },
             getColorValue: (f) => {
-              return f[0][layer.elevationColumn];
+              const column = layer.choroplethStyleDefinitionHexagon.column ?? '';
+              if (column.trim === '') {
+                return 0;
+              } else {
+                return getColorValueHexagon(layer.choroplethStyleDefinitionHexagon.values, f[0][column]);
+              }
             },
-            colorRange: [
-              [65, 105, 225],
-              [0, 128, 0],
-              [238, 173, 45],
-              [207, 14, 14],
-            ],
+            colorDomain: [0, getColorsHexagon(layer.choroplethStyleDefinitionHexagon).length - 1],
+            colorRange: getColorsHexagon(layer.choroplethStyleDefinitionHexagon),
           });
 
           resultLayers.push(hexagonLayer);

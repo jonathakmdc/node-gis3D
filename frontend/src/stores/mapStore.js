@@ -177,6 +177,13 @@ class MapStore {
         defaultColor: '#3388ff',
         values: [],
       },
+      choroplethStyleDefinitionHexagon: {
+        colorFunction: null,
+        equal: false,
+        column: null,
+        defaultColor: '#3388ff',
+        values: [],
+      },
     }
   ) {
     return new Promise((resolve, reject) => {
@@ -224,6 +231,8 @@ class MapStore {
       extrusionColumn: '',
       hexagon: '',
       elevationColumn: '',
+      choroplethStyleDefinition: {},
+      choroplethStyleDefinitionHexagon: {},
     }
   ) {
     this.loading = true;
@@ -245,6 +254,7 @@ class MapStore {
       geometryColumn: '',
       styles: {},
       choroplethStyleDefinition: {},
+      choroplethStyleDefinitionHexagon: {},
       extrudePolygon: '',
       extrusionColumn: '',
       hexagon: '',
