@@ -5,6 +5,7 @@ import { LayerGroup, GeoJSON, useMap, LayersControl, Popup, CircleMarker } from 
 import { observer } from 'mobx-react';
 import { toJS } from 'mobx';
 import SidePanel from '../sidePanel/index3D';
+import Legend from '../legend';
 import { Alert, Button, Radio } from 'antd';
 import leaflet from 'leaflet';
 import { TileLayer } from '@deck.gl/geo-layers/typed';
@@ -378,6 +379,7 @@ const Layers = observer(({ onSelectLayers }) => {
     <div>
       <SidePanel layersRefs={layersRefs} onSelectLayers={onSelectLayers} />
       {mapStore.selectFeaturesMode && renderSelectionAlert()}
+      <Legend />
     </div>
   );
 });
