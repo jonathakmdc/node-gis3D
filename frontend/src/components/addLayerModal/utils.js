@@ -4,7 +4,7 @@ export const getStyleWithColorFunction = (style) => {
 
   const colorFunction = (properties) => {
     const innerConditions = conditions;
-    const mapValue = properties[column];
+    const mapValue = Number(properties[column]);
     let resultColor;
     innerConditions.forEach(({ value, color }) => {
       if ((!equal && mapValue >= value) || (equal && mapValue == value)) {

@@ -181,7 +181,7 @@ const Map = observer(({ data = DATA_URL, mapStyle = MAP_STYLE }) => {
   ];
 
   return (
-    <div id="map" style={{ width: '100%', height: '90%', position: 'absolute' }}>
+    <div id="map" style={{ width: '100%', height: '96%', position: 'absolute' }}>
       <Layers onSelectLayers={(layers) => setLayers3D(layers)} />
       {!mapStore.loadingMap ? (
         <DeckGL

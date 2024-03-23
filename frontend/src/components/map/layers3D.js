@@ -204,7 +204,7 @@ const Layers = observer(({ onSelectLayers }) => {
     const resultLayers = [];
     const layersMapStore = toJS(mapStore.layers);
 
-    layersMapStore.forEach((layer) => {
+    layersMapStore.forEach((layer, index) => {
       if (mapStore.layersActive[layer.key]) {
         const styleFunction = (data) => {
           if (layer.styles.colorFunction) {
@@ -233,7 +233,7 @@ const Layers = observer(({ onSelectLayers }) => {
 
         const layerData = new GeoJsonLayer({
           data: data,
-          pickable: true,
+          pickable: index === layersMapStore.length - 1,
           extruded: layer.extrudePolygon ?? false,
           wireframe: layer.extrudePolygon ?? false,
           getFillColor: (f) => {
@@ -270,7 +270,7 @@ const Layers = observer(({ onSelectLayers }) => {
 
           const hexagonLayer = new HexagonLayer({
             data: dataHexagon,
-            pickable: true,
+            pickable: index === layersMapStore.length - 1,
             extruded: true,
             radius: layer.radiusHexagon ? Number(layer.radiusHexagon) : 1000,
             elevationScale: layer.elevationScaleHexagon ? Number(layer.elevationScaleHexagon) : 1000,

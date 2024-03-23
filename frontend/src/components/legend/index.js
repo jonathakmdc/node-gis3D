@@ -60,7 +60,10 @@ const Legend = observer(({ layersRefs }) => {
                   </Row>
                   {layer.choroplethStyleDefinition.values.map((obj, index) => (
                     <Row key={index} align="middle" style={{ marginTop: '10px' }}>
-                      <Tag color={obj.color} style={{ width: '20px', height: '25px' }} /> {`>= ${obj.value}`}
+                      <Tag color={obj.color} style={{ width: '20px', height: '25px' }} />{' '}
+                      {index !== layer.choroplethStyleDefinition.values.length - 1
+                        ? `${obj.value} ~ ${layer.choroplethStyleDefinition.values[index + 1].value}`
+                        : `≥ ${obj.value}`}
                     </Row>
                   ))}
                   <Divider />
