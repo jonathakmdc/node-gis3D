@@ -611,6 +611,7 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
               value={formData.extrusionColumn}
               onChange={(value) => setFormData({ ...formData, extrusionColumn: value })}
               style={{ width: '100%', marginTop: 10 }}
+              showSearch
             >
               {getSelectedTableColumns().map((column) => (
                 <Option key={column} value={column}>
@@ -659,6 +660,7 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
               value={formData.elevationColumn}
               onChange={(value) => setFormData({ ...formData, elevationColumn: value })}
               style={{ width: '100%', marginTop: 10 }}
+              showSearch
             >
               {getSelectedTableColumns().map((column) => (
                 <Option key={column} value={column}>
