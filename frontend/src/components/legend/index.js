@@ -45,7 +45,7 @@ const Legend = observer(({ layersRefs }) => {
               );
             }
             // temático ativo (legenda de cores do mapa)
-            if (layer.choroplethStyleDefinition.values.length > 0) {
+            if (layer.choroplethStyleDefinition?.values?.length > 0) {
               legenda.push(
                 <>
                   <Row>
@@ -85,7 +85,7 @@ const Legend = observer(({ layersRefs }) => {
               );
             }
             // hexagon ativo e cores (legenda de cores do hexagon)
-            if (layer.choroplethStyleDefinitionHexagon.values.length > 0) {
+            if (layer.choroplethStyleDefinitionHexagon?.values?.length > 0) {
               legenda.push(
                 <>
                   <Row>
