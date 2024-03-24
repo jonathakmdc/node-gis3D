@@ -74,7 +74,7 @@ const TopMenu = observer(() => {
         </Menu>
       </span>
       <span className="logo-text">
-        <b>NodeGIS</b>
+        <b>NodeGIS3D</b>
       </span>
       <SelectedQueryModal
         visible={showSelectedQueryModal}

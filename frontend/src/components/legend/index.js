@@ -49,8 +49,9 @@ const Legend = observer(({ layersRefs }) => {
               legenda.push(
                 <>
                   <Row>
-                    <b>{layer.choroplethStyleDefinition.column}</b>
+                    <b>{layer.choroplethStyleDefinition.label}</b>
                   </Row>
+                  <Row>(Cor do Polígono)</Row>
                   <Row align="middle" style={{ marginTop: '10px' }}>
                     <Tag
                       color={layer.choroplethStyleDefinition.defaultColor}
@@ -89,8 +90,9 @@ const Legend = observer(({ layersRefs }) => {
               legenda.push(
                 <>
                   <Row>
-                    <b>{layer.choroplethStyleDefinitionHexagon.column}</b>
+                    <b>{layer.choroplethStyleDefinitionHexagon.label}</b>
                   </Row>
+                  <Row>(Cor do Hexágono)</Row>
                   <Row align="middle" style={{ marginTop: '10px' }}>
                     <Tag
                       color={layer.choroplethStyleDefinitionHexagon.defaultColor}
@@ -101,8 +103,8 @@ const Legend = observer(({ layersRefs }) => {
                   {layer.choroplethStyleDefinitionHexagon.values.map((obj, index) => (
                     <Row key={index} align="middle" style={{ marginTop: '10px' }}>
                       <Tag color={obj.color} style={{ width: '20px', height: '25px' }} />{' '}
-                      {index !== layer.choroplethStyleDefinition.values.length - 1
-                        ? `${obj.value} ~ ${layer.choroplethStyleDefinition.values[index + 1].value}`
+                      {index !== layer.choroplethStyleDefinitionHexagon.values.length - 1
+                        ? `${obj.value} ~ ${layer.choroplethStyleDefinitionHexagon.values[index + 1].value}`
                         : `≥ ${obj.value}`}
                     </Row>
                   ))}

@@ -7,7 +7,7 @@ import './style.css';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { toJS } from 'mobx';
 import { showNotification } from '../../utils/utils';
-import ChoroplethModal from './cloroplethModal';
+import ChoroplethModal from './cloroplethModal3D';
 
 const { Option } = Select;
 const { Panel } = Collapse;
