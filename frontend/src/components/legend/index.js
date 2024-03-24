@@ -35,7 +35,7 @@ const Legend = observer(({ layersRefs }) => {
               legenda.push(
                 <>
                   <Row>
-                    <b>{layer.extrusionColumn}</b>
+                    <b>{layer.extrusionColumnLabel}</b>
                   </Row>
                   <Row align="middle" style={{ marginTop: '10px' }}>
                     <Tag color="#6B7280" style={{ width: '20px', height: '25px' }} /> Altura do Polígono
@@ -75,7 +75,7 @@ const Legend = observer(({ layersRefs }) => {
               legenda.push(
                 <>
                   <Row>
-                    <b>{layer.elevationColumn}</b>
+                    <b>{layer.elevationColumnLabel}</b>
                   </Row>
                   <Row align="middle" style={{ marginTop: '10px' }}>
                     <Tag color="#6B7280" style={{ width: '20px', height: '25px' }} /> Altura do Hexágono

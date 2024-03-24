@@ -609,7 +609,7 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
             <Select
               disabled={!formData.extrudePolygon}
               value={formData.extrusionColumn}
-              onChange={(value) => setFormData({ ...formData, extrusionColumn: value })}
+              onChange={(value) => setFormData({ ...formData, extrusionColumn: value, extrusionColumnLabel: value })}
               style={{ width: '100%', marginTop: 10 }}
               showSearch
             >
@@ -619,6 +619,17 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
                 </Option>
               ))}
             </Select>
+          </div>
+          <div className="field">
+            <div className="field-label">Extrusion Column Label</div>
+            <Input
+              disabled={!formData.extrudePolygon}
+              placeholder={'Informe o valor'}
+              style={{ width: '100%' }}
+              value={formData.extrusionColumnLabel}
+              onChange={(event) => onChangeValue(event.target.value, 'extrusionColumnLabel')}
+              required
+            />
           </div>
           <div className="field">
             <div className="field-label">Elevation Scale</div>
@@ -658,7 +669,7 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
             <Select
               disabled={!formData.hexagon}
               value={formData.elevationColumn}
-              onChange={(value) => setFormData({ ...formData, elevationColumn: value })}
+              onChange={(value) => setFormData({ ...formData, elevationColumn: value, elevationColumnLabel: value })}
               style={{ width: '100%', marginTop: 10 }}
               showSearch
             >
@@ -668,6 +679,17 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
                 </Option>
               ))}
             </Select>
+          </div>
+          <div className="field">
+            <div className="field-label">Elevation Column Label</div>
+            <Input
+              disabled={!formData.hexagon}
+              placeholder={'Informe o valor'}
+              style={{ width: '100%' }}
+              value={formData.elevationColumnLabel}
+              onChange={(event) => onChangeValue(event.target.value, 'elevationColumnLabel')}
+              required
+            />
           </div>
           <div className="field">
             <div className="field-label">Elevation Scale</div>
