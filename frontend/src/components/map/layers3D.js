@@ -194,8 +194,6 @@ const Layers = observer(({ onSelectLayers }) => {
       }
     }
 
-    console.log(position);
-
     return position;
   };
 

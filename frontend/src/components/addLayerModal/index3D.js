@@ -587,6 +587,20 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
     );
   };
 
+  const addTooltipExtrusion = (value) => {
+    const newData = { column: value, key: 'extrusionColumn', label: value };
+    const newList = tooltipColumns;
+    const index = newList.findIndex((item) => item.key === 'extrusionColumn');
+
+    if (index !== -1) {
+      newList[index] = newData;
+    } else {
+      newList.push(newData);
+    }
+
+    setTooltipColumns(newList);
+  };
+
   const render3DPanelContentExtrusion = () => {
     if (formData.type !== 'query_result') {
       return (
@@ -609,7 +623,10 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
             <Select
               disabled={!formData.extrudePolygon}
               value={formData.extrusionColumn}
-              onChange={(value) => setFormData({ ...formData, extrusionColumn: value, extrusionColumnLabel: value })}
+              onChange={(value) => {
+                setFormData({ ...formData, extrusionColumn: value, extrusionColumnLabel: value });
+                addTooltipExtrusion(value);
+              }}
               style={{ width: '100%', marginTop: 10 }}
               showSearch
             >
@@ -647,6 +664,20 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
     }
   };
 
+  const addTooltipHexagon = (value) => {
+    const newData = { column: value, key: 'hexagonColumn', label: value };
+    const newList = tooltipColumnsHexagon;
+    const index = newList.findIndex((item) => item.key === 'hexagonColumn');
+
+    if (index !== -1) {
+      newList[index] = newData;
+    } else {
+      newList.push(newData);
+    }
+
+    setTooltipColumnsHexagon(newList);
+  };
+
   const render3DPanelContentHexagon = () => {
     if (formData.type !== 'query_result') {
       return (
@@ -669,7 +700,10 @@ const AddLayerModal = observer(({ editLayerKey, visible, onOk, onCancel }) => {
             <Select
               disabled={!formData.hexagon}
               value={formData.elevationColumn}
-              onChange={(value) => setFormData({ ...formData, elevationColumn: value, elevationColumnLabel: value })}
+              onChange={(value) => {
+                setFormData({ ...formData, elevationColumn: value, elevationColumnLabel: value });
+                addTooltipHexagon(value);
+              }}
               style={{ width: '100%', marginTop: 10 }}
               showSearch
             >
