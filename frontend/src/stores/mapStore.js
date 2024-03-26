@@ -305,6 +305,10 @@ class MapStore {
     this.selectedFeatures = { first: {}, second: {} };
   }
 
+  clearSelectedFeatures3D() {
+    this.selectedFeatures = { first: {}, second: {} };
+  }
+
   resetSelectedFeatures(type = 'first') {
     Object.keys(this.selectedFeatures[type]).forEach((key) => {
       this.selectedFeatures[type][key].forEach((item) => {
@@ -343,7 +347,28 @@ class MapStore {
     }
   }
 
+  addFeatureToSelection3D(key, { gid, element }) {
+    if (this.selectFeaturesMode) {
+      if (this.selectedFeatures[this.selectFeaturesMode][key]) {
+        this.selectedFeatures[this.selectFeaturesMode][key].push({ gid, element });
+      } else {
+        this.selectedFeatures[this.selectFeaturesMode][key] = [{ gid, element }];
+      }
+    } else {
+      showNotification('error', 'Erro! Tipo de seleção inválido.');
+    }
+  }
+
   removeFeatureFromSelection(key, gid) {
+    if (this.selectFeaturesMode) {
+      const index = this.featureSelectionGids[this.selectFeaturesMode][key].indexOf(gid);
+      this.selectedFeatures[this.selectFeaturesMode][key].splice(index, 1);
+    } else {
+      showNotification('error', 'Erro! Tipo de seleção inválido.');
+    }
+  }
+
+  removeFeatureFromSelection3D(key, gid) {
     if (this.selectFeaturesMode) {
       const index = this.featureSelectionGids[this.selectFeaturesMode][key].indexOf(gid);
       this.selectedFeatures[this.selectFeaturesMode][key].splice(index, 1);
@@ -461,6 +486,92 @@ class MapStore {
             this.layersActive[layer.key] = true;
           }
           this.clearSelectedFeatures();
+          if (callback) {
+            callback(data);
+          }
+        });
+      })
+      .catch((error) => {
+        runInAction(() => {
+          showErrorNotification(error);
+        });
+      })
+      .finally(() => {
+        runInAction(() => {
+          this.loadingSpatialQuery = false;
+        });
+      });
+  }
+
+  getSelectionSpatialQuery3D({ operation, layerName, auxiliar }, callback, booleanQueryLayer = null) {
+    if (this.layersKeys.includes(layerName) && !['area', 'distance', 'length', 'perimeter'].includes(operation)) {
+      showNotification('error', 'Camada já adicionada!');
+      return;
+    }
+
+    const keysA = Object.keys(this.selectedFeatures.first);
+    const keysB = Object.keys(this.selectedFeatures.second);
+
+    const requestData = {
+      first: {},
+      second: {},
+      operation,
+    };
+    keysA.forEach((key) => {
+      requestData.first[key] = { data: [], geometryColumn: this.layersGeomColumns[key] };
+      requestData.first[key].data = this.selectedFeatures.first[key].map((item) => item.gid);
+    });
+    keysB.forEach((key) => {
+      requestData.second[key] = { data: [], geometryColumn: this.layersGeomColumns[key] };
+      requestData.second[key].data = this.selectedFeatures.second[key].map((item) => item.gid);
+    });
+
+    if (booleanQueryLayer) {
+      requestData.second = {
+        [booleanQueryLayer]: { data: [], geometryColumn: this.layersGeomColumns[booleanQueryLayer] },
+      };
+    }
+
+    if (operation === 'buffer') {
+      requestData.auxiliar = auxiliar / 111;
+    }
+
+    this.loadingSpatialQuery = true;
+
+    this.service
+      .getSpatialQuery(requestData)
+      .then((response) => {
+        runInAction(() => {
+          const data = response.data.data.map((item) => {
+            if (typeof item.geometry === 'string') {
+              item.geometry = JSON.parse(item.geometry);
+            }
+            return item;
+          });
+
+          if (!['area', 'distance', 'length', 'perimeter'].includes(operation)) {
+            const layer = {
+              name: layerName,
+              key: layerName,
+              type: 'query_result',
+              sql: response.data.query,
+              displayColumns: [],
+              data,
+              geometryColumn: 'unknown',
+              styles: { fillColor: '#3388ff', fillOpacity: 0.2, color: '#3388ff', weight: 3, opacity: 1 },
+              styleType: 'static',
+              choroplethStyleDefinition: {
+                colorFunction: null,
+                equal: false,
+                column: null,
+                defaultColor: '#3388ff',
+                values: [],
+              },
+            };
+            this.layers.push(layer);
+            this.layersActive[layer.key] = true;
+          }
+          this.clearSelectedFeatures3D();
           if (callback) {
             callback(data);
           }

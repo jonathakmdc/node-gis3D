@@ -197,6 +197,26 @@ const Layers = observer(({ onSelectLayers }) => {
     return position;
   };
 
+  const getColorHighLight = (f) => {
+    if (mapStore.selectFeaturesMode) {
+      return hexToRgba(mapStore.selectFeaturesMode === 'first' ? '#FFFF00' : '#b81212', 0.7);
+    } else {
+      return hexToRgba('#ffffff', 0);
+    }
+  };
+
+  const handleClickEvent3D = (e, key) => {
+    console.log(e);
+    if (mapStore.selectFeaturesMode) {
+      if (mapStore.isFeatureSelected(key, e.object.gid ?? e.object.GID ?? '1')) {
+        mapStore.removeFeatureFromSelection3D(key, e.object.gid ?? e.object.GID ?? '1');
+      } else {
+        const gid = e.object.gid ?? e.object.GID ?? '1';
+        mapStore.addFeatureToSelection3D(key, { gid, element: e.object });
+      }
+    }
+  };
+
   useEffect(() => {
     mapStore.loadingMap = true;
     const resultLayers = [];
@@ -230,8 +250,9 @@ const Layers = observer(({ onSelectLayers }) => {
         console.log(layer);
 
         const layerData = new GeoJsonLayer({
+          id: layer.key,
           data: data,
-          pickable: index === layersMapStore.length - 1,
+          pickable: true,
           extruded: layer.extrudePolygon ?? false,
           wireframe: layer.extrudePolygon ?? false,
           getFillColor: (f) => {
@@ -240,12 +261,16 @@ const Layers = observer(({ onSelectLayers }) => {
           getElevation: (f) => {
             return Number(f[layer.extrusionColumn]);
           },
-          elevationScale: Number(layer.elevationScale),
+          elevationScale: layer.elevationScale ? Number(layer.elevationScale) : 0,
           getLineColor: hexToRgba(layer.styles.color, layer.styles.opacity),
           getLineWidth: layer.styles.weight,
           lineWidthUnits: 'pixels',
           getPolygon: (f) => f,
-          onClick: (f) => console.log(f),
+          onClick: (f) => handleClickEvent3D(f, layer.key),
+          autoHighlight: true,
+          highlightColor: (f) => {
+            return getColorHighLight(f);
+          },
         });
 
         resultLayers.push(layerData);

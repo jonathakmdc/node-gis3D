@@ -13,7 +13,7 @@ import { observer } from 'mobx-react';
 import './style.css';
 import { useStores } from '../../hooks/useStores';
 import AddLayerModal from '../addLayerModal/index3D';
-import SelectedQueryModal from '../selectedQueryModal';
+import SelectedQueryModal from '../selectedQueryModal/index3D';
 import SqlModal from '../sqlModal';
 import DbConfigModal from '../dbConfig';
 import DatabaseTableListModal from '../dbTableList';
