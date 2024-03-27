@@ -3,7 +3,7 @@ import './style.css';
 import { useStores } from '../../hooks/useStores';
 import { LayerGroup, GeoJSON, useMap, LayersControl, Popup, CircleMarker } from 'react-leaflet';
 import { observer } from 'mobx-react';
-import { toJS } from 'mobx';
+import { autorun, toJS, when } from 'mobx';
 import SidePanel from '../sidePanel/index3D';
 import Legend from '../legend';
 import { Alert, Button, Radio } from 'antd';
@@ -162,12 +162,12 @@ const Layers = observer(({ onSelectLayers }) => {
   };
 
   const getCentroidTable = async (tableName) => {
-    const result = await mapStore.getCentroidTable(tableName);
-    return result;
+    await mapStore.getCentroidTable(tableName);
   };
 
   const getCentroid = (gid) => {
-    const centroid = mapStore.centroidsTable.data.find((item) => item.gid === gid);
+    const centroids = mapStore.centroidsTable;
+    const centroid = centroids.data.find((item) => item.gid === gid);
     return toJS(JSON.parse(centroid.st_asgeojson).coordinates);
   };
 
@@ -247,8 +247,6 @@ const Layers = observer(({ onSelectLayers }) => {
           });
         }
 
-        console.log(layer);
-
         const layerData = new GeoJsonLayer({
           id: layer.key,
           data: data,
@@ -276,8 +274,6 @@ const Layers = observer(({ onSelectLayers }) => {
         resultLayers.push(layerData);
 
         if (layer.hexagon) {
-          getCentroidTable(layer.key);
-
           let dataHexagon = data;
 
           if (layer.displayColumnsHexagon.length > 0) {
@@ -291,13 +287,15 @@ const Layers = observer(({ onSelectLayers }) => {
             });
           }
 
+          console.log(dataHexagon);
+
           const hexagonLayer = new HexagonLayer({
             data: dataHexagon,
             pickable: index === layersMapStore.length - 1,
             extruded: true,
             radius: layer.radiusHexagon ? Number(layer.radiusHexagon) : 1000,
             elevationScale: layer.elevationScaleHexagon ? Number(layer.elevationScaleHexagon) : 1000,
-            getPosition: (d) => getCentroid(d.gid),
+            getPosition: (d) => d.centroid.coordinates,
             getElevationValue: (f) => {
               return Number(f[0][layer.elevationColumn]);
             },

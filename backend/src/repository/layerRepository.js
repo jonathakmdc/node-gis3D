@@ -17,11 +17,11 @@ const buildLayerQuery = (cols = [], geometryColumn, table) => {
   if (dbParams.dialect === 'postgres' || dbParams.dialect === 'cockroach') {
     resultQuery = `SELECT  ${
       cols.length > 0 ? cols + ',' : ''
-    } ST_AsGeoJSON(t.${geometryColumn}) AS geometry  FROM \"${table}\" t`;
+    } ST_AsGeoJSON(t.${geometryColumn}) AS geometry, ST_AsGeoJSON(ST_CENTROID(t.${geometryColumn})) as centroid  FROM \"${table}\" t`;
   } else if (dbParams.dialect === 'mariadb' || dbParams.dialect === 'mysql') {
     resultQuery = `SELECT  ${
       cols.length > 0 ? cols + ',' : ''
-    } ST_AsGeoJSON(t.${geometryColumn}) AS geometry  FROM \`${table}\` t`;
+    } ST_AsGeoJSON(t.${geometryColumn}) AS geometry, ST_AsGeoJSON(ST_CENTROID(t.${geometryColumn})) as centroid  FROM \`${table}\` t`;
   } else {
     throw new Error('Banco de Dados não suportado.');
   }

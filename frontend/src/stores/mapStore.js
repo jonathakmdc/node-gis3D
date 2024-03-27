@@ -66,6 +66,7 @@ class MapStore {
     this.createConnection = this.createConnection.bind(this);
     this.saveLayers = this.saveLayers.bind(this);
     this.loadSavedLayers = this.loadSavedLayers.bind(this);
+    this.getCentroidTable = this.getCentroidTable.bind(this);
 
     this.getAvailableLayers();
   }
@@ -274,6 +275,9 @@ class MapStore {
           const data = response.data.map((item) => {
             if (typeof item.geometry === 'string') {
               item.geometry = JSON.parse(item.geometry);
+            }
+            if (typeof item.centroid === 'string') {
+              item.centroid = JSON.parse(item.centroid);
             }
             return item;
           });
