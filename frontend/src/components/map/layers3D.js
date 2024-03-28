@@ -183,17 +183,24 @@ const Layers = observer(({ onSelectLayers }) => {
     return colorRange;
   };
 
-  const getColorValueHexagon = (values, value) => {
+  const getColorValueHexagon = (equal, values, value) => {
     let position = 0;
 
-    for (let i = 0; i < values.length; i++) {
-      if (Number(value) >= Number(values[i].value)) {
-        position = values[i].pos + 1;
-      } else {
-        break;
+    if (equal) {
+      for (let i = 0; i < values.length; i++) {
+        if (Number(value) === Number(values[i].value)) {
+          position = values[i].pos + 1;
+        }
+      }
+    } else {
+      for (let i = 0; i < values.length; i++) {
+        if (Number(value) >= Number(values[i].value)) {
+          position = values[i].pos + 1;
+        } else {
+          break;
+        }
       }
     }
-
     return position;
   };
 
@@ -304,7 +311,11 @@ const Layers = observer(({ onSelectLayers }) => {
               if (column.trim === '') {
                 return 0;
               } else {
-                return getColorValueHexagon(layer.choroplethStyleDefinitionHexagon.values, f[0][column]);
+                return getColorValueHexagon(
+                  layer.choroplethStyleDefinitionHexagon.equal ?? false,
+                  layer.choroplethStyleDefinitionHexagon.values,
+                  f[0][column]
+                );
               }
             },
             colorDomain: [0, getColorsHexagon(layer.choroplethStyleDefinitionHexagon).length - 1],

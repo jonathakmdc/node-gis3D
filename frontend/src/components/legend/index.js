@@ -46,30 +46,55 @@ const Legend = observer(({ layersRefs }) => {
             }
             // temático ativo (legenda de cores do mapa)
             if (layer.choroplethStyleDefinition?.values?.length > 0) {
-              legenda.push(
-                <>
-                  <Row>
-                    <b>{layer.choroplethStyleDefinition.label}</b>
-                  </Row>
-                  <Row>(Cor do Polígono)</Row>
-                  <Row align="middle" style={{ marginTop: '10px' }}>
-                    <Tag
-                      color={layer.choroplethStyleDefinition.defaultColor}
-                      style={{ width: '20px', height: '25px' }}
-                    />{' '}
-                    {`0 ~ ${layer.choroplethStyleDefinition.values[0].value}`}
-                  </Row>
-                  {layer.choroplethStyleDefinition.values.map((obj, index) => (
-                    <Row key={index} align="middle" style={{ marginTop: '10px' }}>
-                      <Tag color={obj.color} style={{ width: '20px', height: '25px' }} />{' '}
-                      {index !== layer.choroplethStyleDefinition.values.length - 1
-                        ? `${obj.value} ~ ${layer.choroplethStyleDefinition.values[index + 1].value}`
-                        : `≥ ${obj.value}`}
+              if (layer.choroplethStyleDefinition?.equal) {
+                legenda.push(
+                  <>
+                    <Row>
+                      <b>{layer.choroplethStyleDefinition.label}</b>
                     </Row>
-                  ))}
-                  <Divider />
-                </>
-              );
+                    <Row>(Cor do Polígono)</Row>
+                    <Row align="middle" style={{ marginTop: '10px' }}></Row>
+                    {layer.choroplethStyleDefinition.values.map((obj, index) => (
+                      <Row key={index} align="middle" style={{ marginTop: '10px' }}>
+                        <Tag color={obj.color} style={{ width: '20px', height: '25px' }} /> {`= ${obj.value}`}
+                      </Row>
+                    ))}
+                    <Row align="middle" style={{ marginTop: '10px' }}>
+                      <Tag
+                        color={layer.choroplethStyleDefinition.defaultColor}
+                        style={{ width: '20px', height: '25px' }}
+                      />{' '}
+                      {`Outros valores`}
+                    </Row>
+                    <Divider />
+                  </>
+                );
+              } else {
+                legenda.push(
+                  <>
+                    <Row>
+                      <b>{layer.choroplethStyleDefinition.label}</b>
+                    </Row>
+                    <Row>(Cor do Polígono)</Row>
+                    <Row align="middle" style={{ marginTop: '10px' }}>
+                      <Tag
+                        color={layer.choroplethStyleDefinition.defaultColor}
+                        style={{ width: '20px', height: '25px' }}
+                      />{' '}
+                      {`0 ~ ${layer.choroplethStyleDefinition.values[0].value}`}
+                    </Row>
+                    {layer.choroplethStyleDefinition.values.map((obj, index) => (
+                      <Row key={index} align="middle" style={{ marginTop: '10px' }}>
+                        <Tag color={obj.color} style={{ width: '20px', height: '25px' }} />{' '}
+                        {index !== layer.choroplethStyleDefinition.values.length - 1
+                          ? `${obj.value} ~ ${layer.choroplethStyleDefinition.values[index + 1].value}`
+                          : `≥ ${obj.value}`}
+                      </Row>
+                    ))}
+                    <Divider />
+                  </>
+                );
+              }
             }
             // hexagon ativo (legenda de altura de hexagon)
             if (layer.hexagon) {
@@ -87,30 +112,55 @@ const Legend = observer(({ layersRefs }) => {
             }
             // hexagon ativo e cores (legenda de cores do hexagon)
             if (layer.choroplethStyleDefinitionHexagon?.values?.length > 0) {
-              legenda.push(
-                <>
-                  <Row>
-                    <b>{layer.choroplethStyleDefinitionHexagon.label}</b>
-                  </Row>
-                  <Row>(Cor do Hexágono)</Row>
-                  <Row align="middle" style={{ marginTop: '10px' }}>
-                    <Tag
-                      color={layer.choroplethStyleDefinitionHexagon.defaultColor}
-                      style={{ width: '20px', height: '25px' }}
-                    />{' '}
-                    {`0 ~ ${layer.choroplethStyleDefinitionHexagon.values[0].value}`}
-                  </Row>
-                  {layer.choroplethStyleDefinitionHexagon.values.map((obj, index) => (
-                    <Row key={index} align="middle" style={{ marginTop: '10px' }}>
-                      <Tag color={obj.color} style={{ width: '20px', height: '25px' }} />{' '}
-                      {index !== layer.choroplethStyleDefinitionHexagon.values.length - 1
-                        ? `${obj.value} ~ ${layer.choroplethStyleDefinitionHexagon.values[index + 1].value}`
-                        : `≥ ${obj.value}`}
+              if (layer.choroplethStyleDefinitionHexagon?.equal) {
+                legenda.push(
+                  <>
+                    <Row>
+                      <b>{layer.choroplethStyleDefinitionHexagon.label}</b>
                     </Row>
-                  ))}
-                  <Divider />
-                </>
-              );
+                    <Row>(Cor do Hexágono)</Row>
+                    <Row align="middle" style={{ marginTop: '10px' }}></Row>
+                    {layer.choroplethStyleDefinitionHexagon.values.map((obj, index) => (
+                      <Row key={index} align="middle" style={{ marginTop: '10px' }}>
+                        <Tag color={obj.color} style={{ width: '20px', height: '25px' }} /> {`= ${obj.value}`}
+                      </Row>
+                    ))}
+                    <Row align="middle" style={{ marginTop: '10px' }}>
+                      <Tag
+                        color={layer.choroplethStyleDefinitionHexagon.defaultColor}
+                        style={{ width: '20px', height: '25px' }}
+                      />{' '}
+                      {`Outros valores`}
+                    </Row>
+                    <Divider />
+                  </>
+                );
+              } else {
+                legenda.push(
+                  <>
+                    <Row>
+                      <b>{layer.choroplethStyleDefinitionHexagon.label}</b>
+                    </Row>
+                    <Row>(Cor do Hexágono)</Row>
+                    <Row align="middle" style={{ marginTop: '10px' }}>
+                      <Tag
+                        color={layer.choroplethStyleDefinitionHexagon.defaultColor}
+                        style={{ width: '20px', height: '25px' }}
+                      />{' '}
+                      {`0 ~ ${layer.choroplethStyleDefinitionHexagon.values[0].value}`}
+                    </Row>
+                    {layer.choroplethStyleDefinitionHexagon.values.map((obj, index) => (
+                      <Row key={index} align="middle" style={{ marginTop: '10px' }}>
+                        <Tag color={obj.color} style={{ width: '20px', height: '25px' }} />{' '}
+                        {index !== layer.choroplethStyleDefinitionHexagon.values.length - 1
+                          ? `${obj.value} ~ ${layer.choroplethStyleDefinitionHexagon.values[index + 1].value}`
+                          : `≥ ${obj.value}`}
+                      </Row>
+                    ))}
+                    <Divider />
+                  </>
+                );
+              }
             }
             //legenda.push(<div style={{ lineHeight: '26px' }}>teste</div>);
             return legenda;
