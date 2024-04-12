@@ -199,8 +199,9 @@ const Layers = observer(({ onSelectLayers }) => {
           console.log(dataHexagon);
 
           const hexagonLayer = new HexagonLayer({
+            id: `hexagon-${layer.key}`,
             data: dataHexagon,
-            pickable: index === layersMapStore.length - 1,
+            pickable: true,
             extruded: true,
             radius: layer.radiusHexagon ? Number(layer.radiusHexagon) : 1000,
             elevationScale: layer.elevationScaleHexagon ? Number(layer.elevationScaleHexagon) : 1000,
