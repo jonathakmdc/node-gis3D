@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './style.css';
 import { observer } from 'mobx-react';
 import Layers from './layers3D';
-import { GeoJsonLayer, PolygonLayer, BitmapLayer } from '@deck.gl/layers';
 import { LightingEffect, AmbientLight, _SunLight as SunLight } from '@deck.gl/core';
 import { DeckGL } from 'deck.gl';
-import { scaleThreshold } from 'd3-scale';
-import { TileLayer } from '@deck.gl/geo-layers/typed';
-import { MapContainer } from 'react-leaflet';
 import { useStores } from '../../hooks/useStores';
 import { Spin, Button } from 'antd';
 import { MinusOutlined, PlusOutlined, HomeOutlined } from '@ant-design/icons';
