@@ -1,4 +1,4 @@
-# NodeGIS
+# NodeGIS3D
 
 A Web GIS that uses technologies such as NodeJS, ReactJS, Leaflet, Docker, among others. Its main focus is on easy deployment and simplified development of GIS applications.
 

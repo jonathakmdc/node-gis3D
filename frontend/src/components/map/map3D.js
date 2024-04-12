@@ -15,27 +15,6 @@ import { MinusOutlined, PlusOutlined, HomeOutlined } from '@ant-design/icons';
 const center = [-12.966901, -50.366484];
 const zoom = 3;
 
-const DATA_URL = 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/geojson/vancouver-blocks.json';
-
-export const COLOR_SCALE = scaleThreshold()
-  .domain([-0.6, -0.45, -0.3, -0.15, 0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1.05, 1.2])
-  .range([
-    [65, 182, 196],
-    [127, 205, 187],
-    [199, 233, 180],
-    [237, 248, 177],
-    // zero
-    [255, 255, 204],
-    [255, 237, 160],
-    [254, 217, 118],
-    [254, 178, 76],
-    [253, 141, 60],
-    [252, 78, 42],
-    [227, 26, 28],
-    [189, 0, 38],
-    [128, 0, 38],
-  ]);
-
 const INITIAL_VIEW_STATE = {
   latitude: center[0],
   longitude: center[1],
@@ -57,17 +36,6 @@ const dirLight = new SunLight({
   intensity: 1.0,
   _shadow: true,
 });
-
-const landCover = [
-  [
-    [-123.0, 49.196],
-    [-123.0, 49.324],
-    [-123.306, 49.324],
-    [-123.306, 49.196],
-  ],
-];
-
-const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json';
 
 function getTooltip({ object }) {
   if (object) {
@@ -103,7 +71,7 @@ function getTooltip({ object }) {
   }
 }
 
-const Map = observer(({ data = DATA_URL, mapStyle = MAP_STYLE }) => {
+const Map = observer(() => {
   const [layers3D, setLayers3D] = useState([]);
   const [viewState, setViewState] = useState();
   const { mapStore } = useStores();
@@ -142,43 +110,6 @@ const Map = observer(({ data = DATA_URL, mapStyle = MAP_STYLE }) => {
       setViewState(stateCopy);
     }
   };
-
-  const layers = [
-    new TileLayer({
-      // https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Tile_servers
-      data: 'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      // data: 'https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}.png',
-
-      minZoom: 0,
-      maxZoom: 19,
-      tileSize: 256,
-
-      renderSubLayers: (props: any) => {
-        const {
-          bbox: { west, south, east, north },
-        } = props.tile;
-
-        return new BitmapLayer(props, {
-          data: undefined,
-          image: props.data,
-          bounds: [west, south, east, north],
-        });
-      },
-    }),
-    new GeoJsonLayer({
-      id: 'geojson',
-      data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/geojson/vancouver-blocks.json',
-      opacity: 0.8,
-      stroked: false,
-      filled: true,
-      extruded: true,
-      wireframe: true,
-      getElevation: (f) => Math.sqrt(f.properties.valuePerSqm) * 10,
-      getFillColor: (f) => COLOR_SCALE(f.properties.growth),
-      getLineColor: [255, 255, 255],
-      pickable: true,
-    }),
-  ];
 
   return (
     <div id="map" style={{ width: '100%', height: '96%', position: 'absolute' }}>
