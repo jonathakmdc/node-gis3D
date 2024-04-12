@@ -1,39 +1,19 @@
 import React, { createRef, useEffect, useState } from 'react';
 import './style.css';
 import { useStores } from '../../hooks/useStores';
-import { LayerGroup, GeoJSON, useMap, LayersControl, Popup, CircleMarker } from 'react-leaflet';
 import { observer } from 'mobx-react';
-import { autorun, toJS, when } from 'mobx';
+import { toJS } from 'mobx';
 import SidePanel from '../sidePanel/index3D';
 import Legend from '../legend';
-import { Alert, Button, Radio } from 'antd';
-import leaflet from 'leaflet';
+import { Alert, Button } from 'antd';
 import { TileLayer } from '@deck.gl/geo-layers/typed';
-import { GeoJsonLayer, PolygonLayer, BitmapLayer } from '@deck.gl/layers';
-import { scaleThreshold } from 'd3-scale';
-import { useObserver } from 'mobx-react-lite';
+import { GeoJsonLayer, BitmapLayer } from '@deck.gl/layers';
 import { HexagonLayer } from '@deck.gl/aggregation-layers/typed';
 
 const Layers = observer(({ onSelectLayers }) => {
   const { mapStore } = useStores();
   const [layersRefs, setLayersRefs] = useState({});
   const [isInitialLoad, setIsInitialLoad] = useState(true);
-  const [layers, setLayers] = useState([]);
-
-  const layersStore = useObserver(() => mapStore.layersActive);
-
-  const addLayer = (newLayer) => {
-    setLayers((prevLayers) => [...prevLayers, newLayer]);
-    onSelectLayers(layers);
-  };
-
-  const deleteLayer = (index) => {
-    const updatedLayers = [...layers];
-    updatedLayers.splice(index, 1);
-
-    setLayers(updatedLayers);
-    onSelectLayers(updatedLayers);
-  };
 
   const baseLayer = new TileLayer({
     // https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Tile_servers
@@ -44,7 +24,7 @@ const Layers = observer(({ onSelectLayers }) => {
     maxZoom: 19,
     tileSize: 256,
 
-    renderSubLayers: (props: any) => {
+    renderSubLayers: (props) => {
       const {
         bbox: { west, south, east, north },
       } = props.tile;
@@ -61,8 +41,6 @@ const Layers = observer(({ onSelectLayers }) => {
     const refs = {};
     if (isInitialLoad) {
       //colocar camada base
-
-      setLayers([baseLayer]);
       onSelectLayers([baseLayer]);
 
       setIsInitialLoad(false);
@@ -75,38 +53,6 @@ const Layers = observer(({ onSelectLayers }) => {
 
     setLayersRefs(refs);
   }, [mapStore.layersKeys]);
-
-  const getTooltip = (registry, displayColumns) => {
-    if (displayColumns.length > 0) {
-      return displayColumns.map(({ column, label }) => (
-        <div>
-          <b>{label}: </b>
-          {registry[column]}
-        </div>
-      ));
-    }
-  };
-
-  const handleClickEvent = (e, registry, key) => {
-    if (mapStore.selectFeaturesMode) {
-      const layerStyle = mapStore.getLayerStyle(key);
-      if (mapStore.isFeatureSelected(key, registry.gid ?? registry.GID)) {
-        mapStore.removeFeatureFromSelection(key, registry.gid ?? registry.GID);
-        e.target.setStyle(layerStyle);
-      } else {
-        e.target.setStyle({
-          weight: 5,
-          color: mapStore.selectFeaturesMode === 'first' ? '#FFFF00' : '#b81212',
-          dashArray: '',
-          fillOpacity: 0.7,
-          fillColor: mapStore.selectFeaturesMode === 'first' ? '#FFFF00' : '#b81212',
-        });
-        // e.target.bringToFront();
-        const gid = registry.gid ?? registry.GID;
-        mapStore.addFeatureToSelection(key, { gid, oldStyle: layerStyle, element: e.target });
-      }
-    }
-  };
 
   const hexToRgb = (hex) =>
     hex
@@ -125,50 +71,6 @@ const Layers = observer(({ onSelectLayers }) => {
     const validOpacity = Math.round(Math.min(1, Math.max(0, opacity)) * 255);
 
     return [r, g, b, validOpacity];
-  };
-
-  const calculateCentroid = (geojson) => {
-    let sumX = 0;
-    let sumY = 0;
-    let numPoints = 0;
-
-    if (geojson.type === 'Polygon') {
-      const coordinates = geojson.coordinates[0];
-      numPoints = coordinates.length;
-
-      for (let i = 0; i < numPoints; i++) {
-        const point = coordinates[i];
-        sumX += point[0];
-        sumY += point[1];
-      }
-    } else if (geojson.type === 'MultiPolygon') {
-      const polygons = geojson.coordinates;
-      polygons.forEach((polygon) => {
-        const coordinates = polygon[0];
-        numPoints += coordinates.length;
-
-        for (let i = 0; i < coordinates.length; i++) {
-          const point = coordinates[i];
-          sumX += point[0];
-          sumY += point[1];
-        }
-      });
-    }
-
-    const centroidX = sumX / numPoints;
-    const centroidY = sumY / numPoints;
-
-    return [centroidX, centroidY];
-  };
-
-  const getCentroidTable = async (tableName) => {
-    await mapStore.getCentroidTable(tableName);
-  };
-
-  const getCentroid = (gid) => {
-    const centroids = mapStore.centroidsTable;
-    const centroid = centroids.data.find((item) => item.gid === gid);
-    return toJS(JSON.parse(centroid.st_asgeojson).coordinates);
   };
 
   const getColorsHexagon = (def) => {
@@ -328,71 +230,9 @@ const Layers = observer(({ onSelectLayers }) => {
     });
 
     const newLayers = [baseLayer, ...resultLayers];
-    setLayers(newLayers);
     onSelectLayers(newLayers);
     mapStore.loadingMap = false;
   }, [mapStore.layersActiveComputed]);
-
-  const renderLayers = () => {
-    const resultLayers = [];
-    const layers = toJS(mapStore.layers);
-    layers.forEach((layer) => {
-      const styleFunction = (data) => {
-        if (layer.styles.colorFunction) {
-          return {
-            ...layer.styles,
-            fillColor: layer.styles.colorFunction(data),
-          };
-        } else {
-          return layer.styles;
-        }
-      };
-      const layerType = mapStore.getLayerGeometryType(layer.key);
-      const layerData = layer.data.map((registry) => {
-        if (layerType.includes('Point')) {
-          const latLongList = layerType.includes('Multi')
-            ? leaflet.GeoJSON.coordsToLatLngs(registry.geometry.coordinates)
-            : [leaflet.GeoJSON.coordsToLatLng(registry.geometry.coordinates)];
-
-          const markers = latLongList.map((latLong) => {
-            return (
-              <CircleMarker
-                eventHandlers={{ click: (e) => handleClickEvent(e, registry, layer.key) }}
-                // pathOptions={layer.styles}
-                pathOptions={styleFunction(registry)}
-                center={latLong}
-                radius={5}
-              >
-                {getTooltip(registry, layer.displayColumns)}
-              </CircleMarker>
-            );
-          });
-
-          if (layerType.includes('Multi')) {
-            return <LayerGroup>{markers}</LayerGroup>;
-          } else {
-            return markers[0];
-          }
-        } else {
-          return (
-            <GeoJSON
-              eventHandlers={{ click: (e) => handleClickEvent(e, registry, layer.key) }}
-              pathOptions={styleFunction(registry)}
-              // style={styleFunction}
-              data={registry.geometry}
-            >
-              {getTooltip(registry, layer.displayColumns)}
-            </GeoJSON>
-          );
-        }
-      });
-
-      const layerComponent = <LayerGroup ref={layersRefs[layer.key]}>{layerData}</LayerGroup>;
-
-      resultLayers.push(layerComponent);
-    });
-    return resultLayers;
-  };
 
   const renderSelectionAlert = () => {
     return (
