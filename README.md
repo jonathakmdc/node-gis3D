@@ -1,6 +1,6 @@
 # NodeGIS3D
 
-A Web GIS that uses technologies such as NodeJS, ReactJS, Leaflet, Docker, among others. Its main focus is on easy deployment and simplified development of GIS applications.
+A Web GIS that uses technologies such as NodeJS, ReactJS, Deck.GL, Docker, among others. Its main focus is on easy deployment and simplified development of GIS applications.
 
 **The only prerequisite for using NodeGIS is to have Docker installed.**
 
@@ -29,11 +29,11 @@ $ docker run -d -p 15432:5432 --name nodegis-db mateusqc/nodegis-postgresql
 ```
 
 ```bash
-$ docker run -d -p 8080:80 -e BASE_API_URL='http://localhost:8081' --name nodegis-fe mateusqc/nodegis-fe:latest
+$ docker run -d -p 8080:80 -e BASE_API_URL='http://localhost:8081' --name nodegis3d-fe jonathakmdc/nodegis3d-fe:latest
 ```
 
 ```bash
-$ docker run -d -p 8081:8000 -e DB_IP_ADRESS=${LOCAL_MACHINE_IP} -e DB_PORT="15432" --name nodegis-be mateusqc/nodegis-be:latest
+$ docker run -d -p 8081:8000 -e DB_IP_ADRESS=${LOCAL_MACHINE_IP} -e DB_PORT="15432" --name nodegis3d-be jonathakmdc/nodegis3d-be:latest
 ```
 
 **NOTE: Replace `LOCAL_MACHINE_IP` with the IP of the machine on the local network.**
@@ -59,16 +59,16 @@ $ docker run -d -p 15432:5432 --name nodegis-db mateusqc/nodegis-postgresql
 ```
 
 ```bash
-$ docker run -d -p 8080:80 -e BASE_API_URL="http://${LOCAL_MACHINE_IP}:8081" --name nodegis-fe mateusqc/nodegis-fe:latest
+$ docker run -d -p 8080:80 -e BASE_API_URL="http://${LOCAL_MACHINE_IP}:8081" --name nodegis3d-fe jonathakmdc/nodegis3d-fe:latest
 ```
 
 ```bash
-$ docker run -d -p 8081:8000 -e DB_IP_ADRESS=${LOCAL_MACHINE_IP} -e DB_PORT="15432" --name nodegis-be mateusqc/nodegis-be:latest
+$ docker run -d -p 8081:8000 -e DB_IP_ADRESS=${LOCAL_MACHINE_IP} -e DB_PORT="15432" --name nodegis3d-be jonathakmdc/nodegis3d-be:latest
 ```
 
 **NOTE: Replace `LOCAL_MACHINE_IP` with the public IP of the machine. In addition, the ports can be changed to suit the network being used. By default, the frontend will run on port 8080 and the backend on 8081.**
 
-## Ambiente de Desenvolvimento
+## Development Environment
 
 To run the application in a development environment, some dependencies are necessary:
 
