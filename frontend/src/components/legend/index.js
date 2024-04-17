@@ -40,7 +40,7 @@ const Legend = observer(({ layersRefs }) => {
                       <b>{layer.extrusionColumnLabel}</b>
                     </Row>
                     <Row align="middle" style={{ marginTop: '10px' }}>
-                      <Tag color="#6B7280" style={{ width: '20px', height: '25px' }} /> Polygon Height
+                      <Tag color="#6B7280" style={{ width: '20px', height: '25px' }} /> Polygon's Height
                     </Row>
                     <Divider />
                   </>
@@ -54,7 +54,7 @@ const Legend = observer(({ layersRefs }) => {
                       <Row>
                         <b>{layer.choroplethStyleDefinition.label}</b>
                       </Row>
-                      <Row>(Polygon Color)</Row>
+                      <Row>(Polygon's Color)</Row>
                       <Row align="middle" style={{ marginTop: '10px' }}></Row>
                       {layer.choroplethStyleDefinition.values.map((obj, index) => (
                         <Row key={index} align="middle" style={{ marginTop: '10px' }}>
@@ -77,7 +77,7 @@ const Legend = observer(({ layersRefs }) => {
                       <Row>
                         <b>{layer.choroplethStyleDefinition.label}</b>
                       </Row>
-                      <Row>(Polygon color)</Row>
+                      <Row>(Polygon's color)</Row>
                       <Row align="middle" style={{ marginTop: '10px' }}>
                         <Tag
                           color={layer.choroplethStyleDefinition.defaultColor}
@@ -106,7 +106,7 @@ const Legend = observer(({ layersRefs }) => {
                       <b>{layer.elevationColumnLabel}</b>
                     </Row>
                     <Row align="middle" style={{ marginTop: '10px' }}>
-                      <Tag color="#6B7280" style={{ width: '20px', height: '25px' }} /> Hexagon Height
+                      <Tag color="#6B7280" style={{ width: '20px', height: '25px' }} /> Hexagon's Height
                     </Row>
                     <Divider />
                   </>
@@ -120,7 +120,7 @@ const Legend = observer(({ layersRefs }) => {
                       <Row>
                         <b>{layer.choroplethStyleDefinitionHexagon.label}</b>
                       </Row>
-                      <Row>(Hexagon color)</Row>
+                      <Row>(Hexagon's color)</Row>
                       <Row align="middle" style={{ marginTop: '10px' }}></Row>
                       {layer.choroplethStyleDefinitionHexagon.values.map((obj, index) => (
                         <Row key={index} align="middle" style={{ marginTop: '10px' }}>
@@ -143,7 +143,7 @@ const Legend = observer(({ layersRefs }) => {
                       <Row>
                         <b>{layer.choroplethStyleDefinitionHexagon.label}</b>
                       </Row>
-                      <Row>(Hexagon color)</Row>
+                      <Row>(Hexagon's color)</Row>
                       <Row align="middle" style={{ marginTop: '10px' }}>
                         <Tag
                           color={layer.choroplethStyleDefinitionHexagon.defaultColor}
