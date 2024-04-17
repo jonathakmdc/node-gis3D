@@ -53,7 +53,7 @@ const TopMenu = observer(() => {
               Vector Layer
             </Menu.Item>
           </SubMenu>
-          <SubMenu key="save" icon={<SaveOutlined />} title="Salve">
+          <SubMenu key="save" icon={<SaveOutlined />} title="Save">
             <Menu.Item icon={<GlobalOutlined />} onClick={mapStore.saveLayers} key="map-state">
               Map Current State
             </Menu.Item>
