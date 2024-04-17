@@ -40,7 +40,7 @@ const Legend = observer(({ layersRefs }) => {
                       <b>{layer.extrusionColumnLabel}</b>
                     </Row>
                     <Row align="middle" style={{ marginTop: '10px' }}>
-                      <Tag color="#6B7280" style={{ width: '20px', height: '25px' }} /> Altura do Polígono
+                      <Tag color="#6B7280" style={{ width: '20px', height: '25px' }} /> Polygon Height
                     </Row>
                     <Divider />
                   </>
@@ -54,7 +54,7 @@ const Legend = observer(({ layersRefs }) => {
                       <Row>
                         <b>{layer.choroplethStyleDefinition.label}</b>
                       </Row>
-                      <Row>(Cor do Polígono)</Row>
+                      <Row>(Polygon Color)</Row>
                       <Row align="middle" style={{ marginTop: '10px' }}></Row>
                       {layer.choroplethStyleDefinition.values.map((obj, index) => (
                         <Row key={index} align="middle" style={{ marginTop: '10px' }}>
@@ -66,7 +66,7 @@ const Legend = observer(({ layersRefs }) => {
                           color={layer.choroplethStyleDefinition.defaultColor}
                           style={{ width: '20px', height: '25px' }}
                         />{' '}
-                        {`Outros valores`}
+                        {`Other values`}
                       </Row>
                       <Divider />
                     </>
@@ -77,7 +77,7 @@ const Legend = observer(({ layersRefs }) => {
                       <Row>
                         <b>{layer.choroplethStyleDefinition.label}</b>
                       </Row>
-                      <Row>(Cor do Polígono)</Row>
+                      <Row>(Polygon color)</Row>
                       <Row align="middle" style={{ marginTop: '10px' }}>
                         <Tag
                           color={layer.choroplethStyleDefinition.defaultColor}
@@ -106,7 +106,7 @@ const Legend = observer(({ layersRefs }) => {
                       <b>{layer.elevationColumnLabel}</b>
                     </Row>
                     <Row align="middle" style={{ marginTop: '10px' }}>
-                      <Tag color="#6B7280" style={{ width: '20px', height: '25px' }} /> Altura do Hexágono
+                      <Tag color="#6B7280" style={{ width: '20px', height: '25px' }} /> Hexagon Height
                     </Row>
                     <Divider />
                   </>
@@ -120,7 +120,7 @@ const Legend = observer(({ layersRefs }) => {
                       <Row>
                         <b>{layer.choroplethStyleDefinitionHexagon.label}</b>
                       </Row>
-                      <Row>(Cor do Hexágono)</Row>
+                      <Row>(Hexagon color)</Row>
                       <Row align="middle" style={{ marginTop: '10px' }}></Row>
                       {layer.choroplethStyleDefinitionHexagon.values.map((obj, index) => (
                         <Row key={index} align="middle" style={{ marginTop: '10px' }}>
@@ -132,7 +132,7 @@ const Legend = observer(({ layersRefs }) => {
                           color={layer.choroplethStyleDefinitionHexagon.defaultColor}
                           style={{ width: '20px', height: '25px' }}
                         />{' '}
-                        {`Outros valores`}
+                        {`Other values`}
                       </Row>
                       <Divider />
                     </>
@@ -143,7 +143,7 @@ const Legend = observer(({ layersRefs }) => {
                       <Row>
                         <b>{layer.choroplethStyleDefinitionHexagon.label}</b>
                       </Row>
-                      <Row>(Cor do Hexágono)</Row>
+                      <Row>(Hexagon color)</Row>
                       <Row align="middle" style={{ marginTop: '10px' }}>
                         <Tag
                           color={layer.choroplethStyleDefinitionHexagon.defaultColor}
@@ -177,7 +177,7 @@ const Legend = observer(({ layersRefs }) => {
   return (
     <div className="legend">
       <Collapse bordered={false}>
-        <Panel header="Legenda" key="1">
+        <Panel header="Legend" key="1">
           {mapStore.loading || mapStore.loadingMap ? (
             <>
               <Spin />
