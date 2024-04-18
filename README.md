@@ -49,7 +49,7 @@ You must ensure that you have privileges to execute scripts, in addition to the 
 To have the privileges temporarily, the following command can be used:
 
 ```powershell
-Set-ExecutionPolicy Unrestricted -Scope Process -Force`
+Set-ExecutionPolicy Unrestricted -Scope Process -Force
 ```
 
 The individual commands are also listed below:
