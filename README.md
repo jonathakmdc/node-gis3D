@@ -10,6 +10,8 @@ Shell scripts have been implemented to facilitate the use of the application. Th
 
 ## Local Environment
 
+### Unix
+
 To run the application in a local environment, simply execute the `run-application-local.sh` shell script as follows:
 
 ```bash
@@ -35,6 +37,26 @@ $ docker run -d -p 8080:80 -e BASE_API_URL='http://localhost:8081' --name nodegi
 ```bash
 $ docker run -d -p 8081:8000 -e DB_IP_ADRESS=${LOCAL_MACHINE_IP} -e DB_PORT="15432" --name nodegis3d-be jonathakmdc/nodegis3d-be:latest
 ```
+
+**NOTE: Replace `LOCAL_MACHINE_IP` with the IP of the machine on the local network.**
+
+### Windows
+
+To run the application in a local environment, simply execute the `run-application-local.ps1` script in the PowerShell application.
+
+You must ensure that you have privileges to execute scripts, in addition to the Docker engine running.
+
+To have the privileges temporarily, the following command can be used:
+
+`Set-ExecutionPolicy Unrestricted -Scope Process -Force`
+
+The individual commands are also listed below:
+
+`docker run -d -p 15432:5432 --name nodegis-db mateusqc/nodegis-postgresql`
+
+`docker run -d -p 8080:80 -e BASE_API_URL='http://localhost:8081' --name nodegis3d-fe jonathakmdc/nodegis3d-fe:latest`
+
+`docker run -d -p 8081:8000 -e DB_IP_ADRESS=LOCAL_MACHINE_IP -e DB_PORT="15432" --name nodegis3d-be jonathakmdc/nodegis3d-be:latest`
 
 **NOTE: Replace `LOCAL_MACHINE_IP` with the IP of the machine on the local network.**
 
