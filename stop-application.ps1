@@ -1,0 +1,1 @@
+docker rm -vf nodegis3d-be, nodegis3d-fe, nodegis-db

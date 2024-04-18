@@ -42,7 +42,7 @@ $ docker run -d -p 8081:8000 -e DB_IP_ADRESS=${LOCAL_MACHINE_IP} -e DB_PORT="154
 
 ### Windows
 
-To run the application in a local environment, simply execute the `run-application-local.ps1` script in the PowerShell application.
+To run the application in a local environment, simply execute the `.\run-application-local.ps1` script in the PowerShell application.
 
 You must ensure that you have privileges to execute scripts, in addition to the Docker engine running.
 
