@@ -74,7 +74,7 @@ To run the application in a production environment, simply execute the `run-appl
 
 ```bash
 # Directly, it is necessary to give execution permission to the script
-$ ./run-application-prod.sh.sh
+$ ./run-application-prod.sh
 ```
 
 ```bash
